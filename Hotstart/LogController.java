@@ -5,7 +5,6 @@ import java.util.Map;
 public class LogController {
 	
 	private Sink sink;
-	private Map<String, String> config;
 	private static LogController logControllerInstance = new LogController(); //early initialization
 	
 	private LogController() {
@@ -16,15 +15,13 @@ public class LogController {
 		return logControllerInstance;
 	}
 	
-	public void setLogConfig(Map<String, String> config){
+	public void setLogConfig(Map<CONFIG_KEY, String> config){
 		if(config == null) {
 			//get default sink..
 			this.sink = SinkFactory.getSink(SINK_TYPE.CONSOLE, null);
 			return;
 		}
-		
-		this.config = config;
-		this.sink = SinkFactory.getSink(SINK_TYPE.valueOf(config.get("SinkType")), config);
+		this.sink = SinkFactory.getSink(SINK_TYPE.valueOf(config.get(CONFIG_KEY.sinkType)), config);
 	}
 
 	public void setSink(Sink sink) {
@@ -33,13 +30,14 @@ public class LogController {
 		}
 	}
 
-	public void writeLog(LOG_LEVEL log_level, String msg, Object object) {
-		Message message = new Message(log_level, msg, object.getClass().getName());
+	public void writeLog(LOG_LEVEL log_level, String msg, String namespace) {
+		Message message = new Message(log_level, msg, namespace);
 		
 		sink.writeLog(message);
 	}
 
 	public void writeLog(LOG_LEVEL log_level, String msg) {
+		
 		if(this.sink == null) {
 			sink = SinkFactory.getSink(SINK_TYPE.CONSOLE, null);
 		}

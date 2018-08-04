@@ -14,7 +14,6 @@ class Message {
 	}
 
 	Message(LOG_LEVEL log_level, String content, String namespace){
-		this.setTimestamp(new SimpleDateFormat("yyyy.mm.dd.hh.mm.ss").format(new Date()));
 		this.log_level = log_level;
 		this.content = content;
 		this.namespace = namespace;
@@ -56,8 +55,8 @@ class Message {
 	public String toString() {
 		
 		if (namespace != null) {
-			return "[ "+timestamp +"] ["+ log_level.toString() + "] ["+ namespace + "] " + content;
+			return "[ "+timestamp +"] ["+ log_level.toString() + "] ["+ namespace + "] " + content+"\n";
 		}
-		return "[ "+timestamp +"] ["+ log_level.toString() + "] " + content;
+		return "[ "+timestamp +"] ["+ log_level.toString() + "] " + content +"\n";
 	}
 }

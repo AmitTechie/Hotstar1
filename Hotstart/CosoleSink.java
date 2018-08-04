@@ -1,12 +1,14 @@
 package Hotstart;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Map;
 
 public class CosoleSink extends Sink{
 
 	@Override
-	public void configSink(Map<String, String> config) {
+	public boolean configSink(Map<CONFIG_KEY, String> config) {
 		sink_type = SINK_TYPE.CONSOLE;
 		logLevelSet = new HashSet<>();
 		
@@ -21,14 +23,19 @@ public class CosoleSink extends Sink{
 			//get the log levels from config map and put into the set, key = "LogLevel" => "DEBUG,INFO,WARNING,ERROR,FATAL"
 		}
 		
+		
+		return true;
 	}
 	
 	@Override
 	public void writeLog(Message message) {
 	
-		if(!logLevelSet.contains(message.getLogLevel())){
+		if(message == null || !logLevelSet.contains(message.getLogLevel())){
 			return;
 		}
+		
+		message.setTimestamp(new SimpleDateFormat(date_format.toString()).format(new Date()));
+		
 		
 		System.out.println(message.toString());
 	}
